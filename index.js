@@ -1,31 +1,18 @@
 const express = require('express');
 const app = express();
-
 const mongoose = require('mongoose');
-
 const cors = require('cors');
-
 require('dotenv').config();
+const authRoutes = require('./routes/api/authRoutes');
+const classRoutes = require('./routes/api/classRoutes');
+const teacherRoutes = require('./routes/api/teacherRoutes');
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Import route files
-// const adminRoutes = require('./routes/api/adminRoutes');
-// const teacherRoutes = require('./routes/api/teacherRoutes');
-// const studentRoutes = require('./routes/api/studentRoutes');
-const authRoutes = require('./routes/api/authRoutes');
-// Apply routes
-// app.use('/api/admin', adminRoutes);
-// app.use('/api/teacher', teacherRoutes);
-// app.use('/api/student', studentRoutes);
-app.use('/api/auth', authRoutes);
-
-
-const uri = process.env.MONGO_URI;
-
 // Connect to MongoDB
+const uri = process.env.MONGO_URI;
 mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -33,21 +20,28 @@ mongoose.connect(uri, {
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.log('MongoDB connection error:', err));
 
+app.get('/test', (req, res) => {
+  res.send('Test route is working');
+});
 
-// Error handling middleware
+// Route Definitions
+app.use('/api/auth', authRoutes);
+app.use('/api/classes', classRoutes);
+app.use('/api/teachers', teacherRoutes);
+
+// Catch-all route for undefined routes (must be last)
+app.use('*', (req, res) => {
+  res.status(404).json({ message: 'Resource not found' });
+});
+
+// Error handling middleware (optional but recommended)
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
 
-// Catch-all route for undefined routes
-app.use('*', (req, res) => {
-  res.status(404).json({ message: 'Resource not found' });
-});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 module.exports = app;
-
-

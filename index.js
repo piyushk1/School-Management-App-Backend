@@ -12,19 +12,15 @@ app.use(cors());
 app.use(express.json());
 
 // Import route files
-const adminRoutes = require('./routes/api/adminRoutes');
-const teacherRoutes = require('./routes/api/teacherRoutes');
-const studentRoutes = require('./routes/api/studentRoutes');
+// const adminRoutes = require('./routes/api/adminRoutes');
+// const teacherRoutes = require('./routes/api/teacherRoutes');
+// const studentRoutes = require('./routes/api/studentRoutes');
 const authRoutes = require('./routes/api/authRoutes');
 // Apply routes
-app.use('/api/admin', adminRoutes);
-app.use('/api/teacher', teacherRoutes);
-app.use('/api/student', studentRoutes);
+// app.use('/api/admin', adminRoutes);
+// app.use('/api/teacher', teacherRoutes);
+// app.use('/api/student', studentRoutes);
 app.use('/api/auth', authRoutes);
-
-
-
-
 
 
 const uri = process.env.MONGO_URI;
@@ -37,11 +33,6 @@ mongoose.connect(uri, {
 .then(() => console.log('MongoDB connected'))
 .catch(err => console.log('MongoDB connection error:', err));
 
-// Routes
-app.use('/api/auth', authRoutes);  // Authentication routes
-app.use('/api/admin', adminRoutes);
-app.use('/api/teacher', teacherRoutes);
-app.use('/api/student', studentRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

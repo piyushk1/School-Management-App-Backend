@@ -6,6 +6,7 @@ require('dotenv').config();
 const authRoutes = require('./routes/api/authRoutes');
 const classRoutes = require('./routes/api/classRoutes');
 const teacherRoutes = require('./routes/api/teacherRoutes');
+const studentRoutes = require('./routes/api/studentRoutes');
 
 // Middleware
 app.use(cors());
@@ -28,6 +29,7 @@ app.get('/test', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/classes', classRoutes);
 app.use('/api/teachers', teacherRoutes);
+app.use('/api/students',studentRoutes);
 
 // Catch-all route for undefined routes (must be last)
 app.use('*', (req, res) => {

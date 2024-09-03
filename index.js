@@ -3,14 +3,15 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
+app.use(cors());
+app.use(express.json());
 const authRoutes = require('./routes/api/authRoutes');
 const classRoutes = require('./routes/api/classRoutes');
 const teacherRoutes = require('./routes/api/teacherRoutes');
 const studentRoutes = require('./routes/api/studentRoutes');
 
 // Middleware
-app.use(cors());
-app.use(express.json());
+
 
 // Connect to MongoDB
 const uri = process.env.MONGO_URI;

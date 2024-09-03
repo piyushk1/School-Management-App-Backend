@@ -38,6 +38,8 @@ router.post('/', async (req, res) => {
 
 // Get all classes
 router.get('/', async (req, res) => {
+    console.log('GET /api/classes route hit');
+
     try {
         const classes = await Class.find().populate('teacher').populate('students');
         res.json(classes);

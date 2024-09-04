@@ -24,15 +24,16 @@ router.post('/', async (req, res) => {
         // }
 
         // Check if student limit is exceeded
-        
-        if (students && students.length > 30) { 
-            return res.status(400).json({ msg: 'Student limit exceeded' });
-        }
+
+        // if (students && students.length > 30) { 
+        //     return res.status(400).json({ msg: 'Student limit exceeded' });
+        // }
 
         const newClass = new Class({ name, year, teacher, studentFees, students });
         await newClass.save();
         res.status(201).json(newClass);
     } catch (err) {
+        res.write(err);
         res.status(500).json({ msg: 'Server error' });
     }
 });

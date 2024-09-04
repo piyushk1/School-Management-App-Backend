@@ -10,21 +10,22 @@ router.post('/', async (req, res) => {
 
     try {
         // Validate that teacher exists
-        const existingTeacher = await Teacher.findById(teacher);
-        if (!existingTeacher) {
-            return res.status(400).json({ msg: 'Teacher not found' });
-        }
+        // const existingTeacher = await Teacher.findById(teacher);
+        // if (!existingTeacher) {
+        //     return res.status(400).json({ msg: 'Teacher not found' });
+        // }
 
         // Validate that students exist
-        if (students) {
-            const existingStudents = await Student.find({ '_id': { $in: students } });
-            if (existingStudents.length !== students.length) {
-                return res.status(400).json({ msg: 'Some students not found' });
-            }
-        }
+        // if (students) {
+        //     const existingStudents = await Student.find({ '_id': { $in: students } });
+        //     if (existingStudents.length !== students.length) {
+        //         return res.status(400).json({ msg: 'Some students not found' });
+        //     }
+        // }
 
         // Check if student limit is exceeded
-        if (students && students.length > 30) { // Assuming a limit of 30 students per class
+        
+        if (students && students.length > 30) { 
             return res.status(400).json({ msg: 'Student limit exceeded' });
         }
 

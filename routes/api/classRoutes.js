@@ -137,34 +137,43 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// POST a new class
+
+
+// POST endpoint to create a new class
 router.post('/', async (req, res) => {
-    const { name, year, teacherName, studentFees, studentNames } = req.body;
+  try {
+    const { name, year, teacherName, studentFees, students } = req.body;
 
-    try {
-        // Find the teacher by name
-        const teacher = await Teacher.findOne({ name: teacherName });
-        if (!teacher) return res.status(404).json({ message: 'Teacher not found' });
-
-        // Find the students by names
-        const students = await Student.find({ name: { $in: studentNames } });
-        if (students.length !== studentNames.length) return res.status(404).json({ message: 'One or more students not found' });
-
-        // Create a new class
-        const newClass = new Class({
-            name,
-            year,
-            teacher: teacher._id,
-            studentFees,
-            students: students.map(student => student._id)
-        });
-
-        const savedClass = await newClass.save();
-        res.status(201).json(savedClass);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
+    // Validate input
+    if (!name || !year || !teacherName || !studentFees || !students) {
+      return res.status(400).json({ message: 'All fields are required' });
     }
+
+    if (!Array.isArray(students) || students.length === 0 || students.some(student => typeof student !== 'string')) {
+      return res.status(400).json({ message: 'Invalid students data' });
+    }
+
+    // Create a new class instance
+    const newClass = new Class({
+      name,
+      year,
+      teacherName,
+      studentFees,
+      students
+    });
+
+    // Save the new class to the database
+    await newClass.save();
+
+    res.status(201).json({ message: 'Class created successfully', class: newClass });
+  } catch (error) {
+    console.error('Error creating class:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
 });
+
+module.exports = router;
+
 
 
 // PUT to update a class

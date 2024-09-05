@@ -139,23 +139,33 @@ router.get('/:id', async (req, res) => {
 
 // POST a new class
 router.post('/', async (req, res) => {
-    const { name, year, teacher, studentFees, students } = req.body;
-
-    const newClass = new Class({
-        name,
-        year,
-        teacher,
-        studentFees,
-        students
-    });
+    const { name, year, teacherName, studentFees, studentNames } = req.body;
 
     try {
+        // Find the teacher by name
+        const teacher = await Teacher.findOne({ name: teacherName });
+        if (!teacher) return res.status(404).json({ message: 'Teacher not found' });
+
+        // Find the students by names
+        const students = await Student.find({ name: { $in: studentNames } });
+        if (students.length !== studentNames.length) return res.status(404).json({ message: 'One or more students not found' });
+
+        // Create a new class
+        const newClass = new Class({
+            name,
+            year,
+            teacher: teacher._id,
+            studentFees,
+            students: students.map(student => student._id)
+        });
+
         const savedClass = await newClass.save();
         res.status(201).json(savedClass);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 });
+
 
 // PUT to update a class
 router.put('/:id', async (req, res) => {

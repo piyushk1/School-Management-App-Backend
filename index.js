@@ -3,7 +3,11 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
-app.use(cors());
+
+
+app.use(cors({
+  origin: 'http://localhost:5173', 
+}));
 app.use(express.json());
 const authRoutes = require('./routes/api/authRoutes');
 const classRoutes = require('./routes/api/classRoutes');

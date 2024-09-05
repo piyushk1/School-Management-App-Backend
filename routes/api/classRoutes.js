@@ -113,7 +113,7 @@
 
 const express = require('express');
 const router = express.Router();
-const Class = require('../models/Class'); 
+const Class = require('../../models/Class'); 
 const Teacher = require('../../models/Teacher');
 const Student = require('../../models/Student');
 // GET all classes

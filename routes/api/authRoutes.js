@@ -3,8 +3,8 @@ const router = express.Router();
 const { AdminSignup, AdminLogin } = require('../../controllers/AdminController'); // Import admin controller functions
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const Student = require('../models/Student');
-const Teacher = require('../models/Teacher');
+const Student = require('../../models/Student');
+const Teacher = require('../../models/Teacher');
 
 // Admin routes
 router.post('/admin/signup', AdminSignup); // Link to AdminSignup function from the controller

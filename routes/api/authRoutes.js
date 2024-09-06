@@ -1,38 +1,63 @@
-// routes/api/auth.js
 const express = require('express');
 const router = express.Router();
-const User = require('../../models/User.js');
+const { AdminSignup, AdminLogin } = require('../controllers/AdminController'); // Import admin controller functions
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const Student = require('../models/Student');
+const Teacher = require('../models/Teacher');
 
-const authMiddleware = require('../../middleware/authmiddleware.js');
+// Admin routes
+router.post('/admin/signup', AdminSignup); // Link to AdminSignup function from the controller
+router.post('/admin/login', AdminLogin);   // Link to AdminLogin function from the controller
 
-// Login Route
-router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+// Student Login
+router.post('/student/login', async (req, res) => {
+  const { email, password, uidNumber } = req.body;
 
-    try {
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ msg: 'Invalid credentials' });
-        }
-
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ msg: 'Invalid credentials' });
-        }
-
-        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ token });
-    } catch (err) {
-        res.status(500).json({ msg: 'Server error' });
+  try {
+    // Check if the student exists with the provided email and uidNumber
+    const student = await Student.findOne({ email, uidNumber });
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found or invalid UID' });
     }
+
+    // Compare the passwords
+    const isMatch = await bcrypt.compare(password, student.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    // Generate a JWT token
+    const token = jwt.sign({ id: student._id, role: 'Student' }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.status(200).json({ message: 'Login successful', token });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 });
 
+// Teacher Login
+router.post('/teacher/login', async (req, res) => {
+  const { email, password } = req.body;
 
-// Example of a protected route
-router.get('/protected', authMiddleware, (req, res) => {
-    res.json({ msg: 'This is a protected route', user: req.user });
+  try {
+    // Check if the teacher exists
+    const teacher = await Teacher.findOne({ email });
+    if (!teacher) {
+      return res.status(404).json({ message: 'Teacher not found' });
+    }
+
+    // Compare the passwords
+    const isMatch = await bcrypt.compare(password, teacher.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    // Generate a JWT token
+    const token = jwt.sign({ id: teacher._id, role: 'Teacher' }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.status(200).json({ message: 'Login successful', token });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 });
 
 module.exports = router;

@@ -1,57 +1,43 @@
 const express = require('express');
-const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
+const authRoutes = require('./routes/authRoutes');
 
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// Middleware
 app.use(cors({
   origin: 'http://localhost:5173',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-
 app.use(express.json());
-const authRoutes = require('./routes/api/authRoutes');
-const classRoutes = require('./routes/api/classRoutes');
-const teacherRoutes = require('./routes/api/teacherRoutes');
-const studentRoutes = require('./routes/api/studentRoutes');
-
-// Middleware
-
 
 // Connect to MongoDB
-const uri = process.env.MONGO_URI;
-mongoose.connect(uri, {
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.log('MongoDB connection error:', err));
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.log('MongoDB connection error:', err));
 
-app.get('/test', (req, res) => {
-  res.send('Test route is working');
-});
-
-// Route Definitions
+// Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/classes', classRoutes);
-app.use('/api/teachers', teacherRoutes);
-app.use('/api/students',studentRoutes);
 
-// Catch-all route for undefined routes (must be last)
+// Catch-all route for undefined routes
 app.use('*', (req, res) => {
   res.status(404).json({ message: 'Resource not found' });
 });
 
-// Error handling middleware (optional but recommended)
+// Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something broke!');
 });
 
-
-const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 module.exports = app;

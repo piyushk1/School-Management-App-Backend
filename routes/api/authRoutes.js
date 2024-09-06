@@ -7,8 +7,8 @@ const Student = require('../../models/Student');
 const Teacher = require('../../models/Teacher');
 
 // Admin routes
-router.post('/admin/signup', AdminSignup); // Link to AdminSignup function from the controller
-router.post('/admin/login', AdminLogin);   // Link to AdminLogin function from the controller
+router.post('/admin/signup', AdminSignup); 
+router.post('/admin/login', AdminLogin);   
 
 // Student Login
 router.post('/student/login', async (req, res) => {

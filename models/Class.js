@@ -1,22 +1,7 @@
-// const mongoose = require('mongoose');
-
-// const classSchema = new mongoose.Schema({
-//     name: { type: String, required: true },
-//     year: { type: Number, required: true },
-//     teacher: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher' },
-//     studentFees: { type: Number, required: true },
-//     students: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Student' }],
-// }, { timestamps: true });
-
-// module.exports = mongoose.model('Class', classSchema);
-const mongoose = require('mongoose');
-
 const classSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  year: { type: Number, required: true },
-  teacherName: { type: String, required: true },
-  studentFees: { type: Number, required: true },
-  students: [{ type: String }] // Ensure this is correctly defined to accept an array of strings
+  name: String,
+  year: Number,
+  teacher: { type: mongoose.Schema.Types.ObjectId, ref: 'Teacher' }, // Reference to the Teacher model
+  studentFees: Number,
+  students: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Student' }] // Reference to the Student model
 });
-
-module.exports = mongoose.model('Class', classSchema);

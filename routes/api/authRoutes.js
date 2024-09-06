@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { AdminSignup, AdminLogin } = require('../controllers/AdminController'); // Import admin controller functions
+const { AdminSignup, AdminLogin } = require('../../controllers/AdminController'); // Import admin controller functions
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Student = require('../models/Student');

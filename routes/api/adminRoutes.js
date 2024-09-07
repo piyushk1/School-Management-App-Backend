@@ -10,6 +10,7 @@ router.post('/admin-signup', async (req, res) => {
   console.log("Admin Signup");
 
   const { name, email, password, schoolName,role } = req.body;
+  console.log("Req Body is",name, email, password, schoolName,role );
 
   try {
     let admin = await Admin.findOne({ email });

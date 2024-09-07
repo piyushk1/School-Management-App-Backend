@@ -4,7 +4,6 @@ const cors = require('cors');
 require('dotenv').config();
 const adminRoutes = require('./routes/api/adminRoutes');
 
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -24,8 +23,8 @@ mongoose.connect(process.env.MONGO_URI, {
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log('MongoDB connection error:', err));
 
-
-  app.use('/api/admin', adminRoutes);
+// Corrected route (added the leading `/`)
+app.use('/api/admin', adminRoutes);
 
 // Catch-all route for undefined routes
 app.use('*', (req, res) => {

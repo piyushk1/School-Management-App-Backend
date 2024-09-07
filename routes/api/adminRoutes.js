@@ -24,6 +24,7 @@ router.post('/admin-signup', async (req, res) => {
     console.log(token);
     res.status(201).json({ token, message: 'Admin registered successfully' });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Server error' });
   }
 });

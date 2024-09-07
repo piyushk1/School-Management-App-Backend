@@ -15,6 +15,8 @@ app.use(cors({
 }));
 app.use(express.json());
 
+console.log("Mongo Uri",process.env.MONGO_URI);
+
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
@@ -23,7 +25,6 @@ mongoose.connect(process.env.MONGO_URI, {
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.log('MongoDB connection error:', err));
 
-// Corrected route (added the leading `/`)
 app.use('/api/admin', adminRoutes);
 
 // Catch-all route for undefined routes
@@ -37,6 +38,10 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something broke!');
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log("Mongo Uri",process.env.MONGO_URI);
+
+});
 
 module.exports = app;

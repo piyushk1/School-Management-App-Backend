@@ -6,7 +6,12 @@ const router = express.Router();
 require('dotenv').config();
 
 router.post('/signup', async (req, res) => {
+  console.log("Student Signup");
+
+
   const { name, email, password, role } = req.body;
+  console.log("Req Body is",name, email, password,role );
+
 
   try {
     // Check if email is already registered
@@ -24,6 +29,8 @@ router.post('/signup', async (req, res) => {
     });
 
     await student.save();
+    const token = jwt.sign({ id: admin._id, role: student.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    console.log(token);
     res.status(201).json({ message: 'Student registered successfully' });
   } catch (error) {
     console.error('Error during student signup:', error);

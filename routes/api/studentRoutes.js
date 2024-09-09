@@ -5,13 +5,10 @@ const Student = require('../../models/Student');
 const router = express.Router();
 require('dotenv').config();
 
+
+
 router.post('/signup', async (req, res) => {
-  console.log("Student Signup");
-
-
   const { name, email, password, role } = req.body;
-  console.log("Req Body is",name, email, password,role );
-
 
   try {
     // Check if email is already registered
@@ -20,23 +17,30 @@ router.post('/signup', async (req, res) => {
       return res.status(400).json({ message: 'Email already registered' });
     }
 
+    // Hash the password before saving
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     // Create a new student
     const student = new Student({
       name,
       email,
-      password,
-      role: role || 'Student', // Ensure role defaults to 'Student'
+      password: hashedPassword,  // Store the hashed password
+      role: role || 'Student',   // Ensure role defaults to 'Student'
     });
 
     await student.save();
-    const token = jwt.sign({ id: admin._id, role: student.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    console.log(token);
-    res.status(201).json({ message: 'Student registered successfully' });
+
+    // Generate JWT token
+    const token = jwt.sign({ id: student._id, role: student.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    
+    res.status(201).json({ message: 'Student registered successfully', token });
   } catch (error) {
-    console.error('Error during student signup:', error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error during student signup:', error.stack);  // Log full error stack
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
+
 
 // Student Login Route
 router.post('/login', async (req, res) => {

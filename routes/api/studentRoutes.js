@@ -5,38 +5,25 @@ const Student = require('../../models/Student');
 const router = express.Router();
 require('dotenv').config();
 
-
-
-// Student Signup Route
 router.post('/signup', async (req, res) => {
-
-  console.log("Student Signup");
-
-
-  const { name, email, password,role } = req.body;
-  console.log("Req Body is",name, email, password,role );
+  const { name, email, password, role } = req.body;
 
   try {
-    // Check if email already exists
+    // Check if email is already registered
     const existingStudent = await Student.findOne({ email });
     if (existingStudent) {
       return res.status(400).json({ message: 'Email already registered' });
     }
 
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create new student
-    const newStudent = new Student({
-      email,
-      password: hashedPassword,
+    // Create a new student
+    const student = new Student({
       name,
-      role,
+      email,
+      password,
+      role: role || 'Student', // Ensure role defaults to 'Student'
     });
 
-    // Save student to the database
-    await newStudent.save();
-
+    await student.save();
     res.status(201).json({ message: 'Student registered successfully' });
   } catch (error) {
     console.error('Error during student signup:', error);

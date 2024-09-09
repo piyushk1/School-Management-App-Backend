@@ -29,6 +29,37 @@ router.post('/admin-signup', async (req, res) => {
   }
 });
 
+
+router.post('/admin-login', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Check if admin exists
+    const admin = await Admin.findOne({ email });
+    if (!admin) {
+      return res.status(400).json({ message: 'Admin not found' });
+    }
+
+    // Validate password
+    const isMatch = await bcrypt.compare(password, admin.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: admin._id, role: admin.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.status(200).json({ token, message: 'Login successful' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router;
 
 

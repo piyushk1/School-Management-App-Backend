@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
-const studentSchema = new mongoose.Schema({
+const student = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  role: { type: String, default: "Student" },
-  uidNumber: { type: String, required: true, unique: true },
+  role: { type: String, default: "Student",required: true },
+  uidNumber: { type: String, unique: true },
   name: { type: String, required: true },
   gender: { type: String, enum: ['Male', 'Female', 'Other'] },
   dob: { type: Date },
@@ -15,4 +15,4 @@ const studentSchema = new mongoose.Schema({
   status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' }, 
 });
 
-module.exports = mongoose.model('Student', studentSchema);
+module.exports = mongoose.model('Student', student);

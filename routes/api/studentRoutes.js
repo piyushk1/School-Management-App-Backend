@@ -9,7 +9,12 @@ require('dotenv').config();
 
 // Student Signup Route
 router.post('/signup', async (req, res) => {
-  const { email, password, name, role } = req.body;
+
+  console.log("Student Signup");
+
+
+  const { name, email, password,role } = req.body;
+  console.log("Req Body is",name, email, password,role );
 
   try {
     // Check if email already exists

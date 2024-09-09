@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const Student = require('../models/Student'); // Make sure the Student model is correctly referenced
+const Student = require('../../models/Student'); 
 const router = express.Router();
 require('dotenv').config();
 

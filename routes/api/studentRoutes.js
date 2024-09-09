@@ -8,7 +8,7 @@ require('dotenv').config();
 
 
 // Student Signup Route
-router.post('/student-signup', async (req, res) => {
+router.post('/signup', async (req, res) => {
   const { email, password, name, role } = req.body;
 
   try {
@@ -40,7 +40,7 @@ router.post('/student-signup', async (req, res) => {
 });
 
 // Student Login Route
-router.post('/student-login', async (req, res) => {
+router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {

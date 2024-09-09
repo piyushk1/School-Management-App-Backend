@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 const adminRoutes = require('./routes/api/adminRoutes');
-
+const studentRoutes = require('./routes/api/studentRoutes');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -26,6 +26,7 @@ mongoose.connect(process.env.MONGO_URI, {
   .catch(err => console.log('MongoDB connection error:', err));
 
 app.use('/api/admin', adminRoutes);
+app.use('/api/student',studentRoutes);
 
 // Catch-all route for undefined routes
 app.use('*', (req, res) => {

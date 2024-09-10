@@ -112,7 +112,7 @@ router.get('/checkProfileCompletion/:uidNumber', async (req, res) => {
 
 
 
-router.put('updateProfile/:uidNumber', async (req, res) => {
+router.put('/updateProfile/:uidNumber', async (req, res) => {
   try {
     const { uidNumber } = req.params;
     const { gender, dob, phoneNo } = req.body;

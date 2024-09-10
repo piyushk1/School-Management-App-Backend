@@ -117,7 +117,7 @@ router.put('/updateProfile/:uidNumber', async (req, res) => {
 
   try {
     const student = await Student.findByIdAndUpdate(
-      req.params.studentId,
+      req.params.uidNumber,
       { gender, dob, phoneNo },
       { new: true, runValidators: true }
     );

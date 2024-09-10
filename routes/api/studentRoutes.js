@@ -17,6 +17,16 @@ router.post('/signup', async (req, res) => {
       return res.status(400).json({ message: 'Email already registered' });
     }
 
+    // Fetch the last inserted student and get their uidNumber
+    const lastStudent = await Student.findOne().sort({ uidNumber: -1 });
+
+    // Generate UID (start from '2024001' if no student exists)
+    let newUidNumber = '2024001';
+    if (lastStudent && lastStudent.uidNumber) {
+      const lastUidNumber = parseInt(lastStudent.uidNumber);
+      newUidNumber = (lastUidNumber + 1).toString();
+    }
+
     // Hash the password before saving
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -27,19 +37,21 @@ router.post('/signup', async (req, res) => {
       email,
       password: hashedPassword,  // Store the hashed password
       role: role || 'Student',   // Ensure role defaults to 'Student'
+      uidNumber: newUidNumber,   // Assign the new UID number
     });
 
     await student.save();
 
     // Generate JWT token
     const token = jwt.sign({ id: student._id, role: student.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    
-    res.status(201).json({ message: 'Student registered successfully', token });
+
+    res.status(201).json({ message: 'Student registered successfully', token, uidNumber: newUidNumber });
   } catch (error) {
     console.error('Error during student signup:', error.stack);  // Log full error stack
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
+
 
 
 // Student Login Route

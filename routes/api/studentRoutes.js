@@ -112,7 +112,7 @@ router.get('/checkProfileCompletion/:uidNumber', async (req, res) => {
 
 
 
-router.put('/updateProfile/:studentId', async (req, res) => {
+router.put('/updateProfile/:uidNumber', async (req, res) => {
   const { gender, dob, phoneNo } = req.body;
 
   try {
@@ -134,7 +134,7 @@ router.put('/updateProfile/:studentId', async (req, res) => {
 });
 
 
-router.get('/student/:uidNumber', async (req, res) => {
+router.get('/:uidNumber', async (req, res) => {
   try {
     const student = await Student.findOne({ uidNumber: req.params.uidNumber });
     if (!student) {

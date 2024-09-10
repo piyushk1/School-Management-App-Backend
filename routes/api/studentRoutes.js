@@ -112,26 +112,25 @@ router.get('/checkProfileCompletion/:uidNumber', async (req, res) => {
 
 
 
-router.put('/updateProfile/:uidNumber', async (req, res) => {
-  const { gender, dob, phoneNo } = req.body;
-
+app.put('updateProfile/:uidNumber', async (req, res) => {
   try {
-    const student = await Student.findByIdAndUpdate(
-      req.params.uidNumber,
-      { gender, dob, phoneNo },
-      { new: true, runValidators: true }
-    );
+    const { uidNumber } = req.params;
+    const { gender, dob, phoneNo } = req.body;
 
-    if (!student) {
-      return res.status(404).json({ message: 'Student not found' });
+    // Update logic for the student
+    const updatedStudent = await Student.updateOne({ uidNumber }, { gender, dob, phoneNo });
+
+    if (!updatedStudent) {
+      return res.status(404).json({ error: 'Student not found' });
     }
 
-    res.status(200).json({ message: 'Profile updated successfully', student });
+    res.status(200).json({ message: 'Profile updated successfully' });
   } catch (error) {
     console.error('Error updating profile:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 
 router.get('/:uidNumber', async (req, res) => {

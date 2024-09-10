@@ -91,4 +91,23 @@ router.post('/login', async (req, res) => {
   }
 });
 
+
+// Check if profile is complete
+router.get('/checkProfileCompletion/:uidNumber', async (req, res) => {
+  try {
+    const student = await Student.findById(req.params.student.uidNumber);
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    const isProfileComplete = student.gender && student.dob && student.phoneNo;
+
+    res.status(200).json({ isProfileComplete: !!isProfileComplete });
+  } catch (error) {
+    console.error('Error checking profile completion:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
 module.exports = router;

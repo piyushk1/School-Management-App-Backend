@@ -53,27 +53,33 @@ router.post('/signup', async (req, res) => {
 });
 
 
-
 // Student Login Route
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, uidNumber } = req.body;
 
   try {
-    // Find student by email
-    const student = await Student.findOne({ email });
+    // Find student by uidNumber or email
+    let student;
+    if (uidNumber) {
+      student = await Student.findOne({ uidNumber });
+    } else if (email) {
+      student = await Student.findOne({ email });
+    }
+
+    // If student not found, return an error
     if (!student) {
-      return res.status(400).json({ message: 'Invalid email or password' });
+      return res.status(400).json({ message: 'Invalid UID/Email or password' });
     }
 
     // Check if the password matches
     const isMatch = await bcrypt.compare(password, student.password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid email or password' });
+      return res.status(400).json({ message: 'Invalid UID/Email or password' });
     }
 
     // Generate JWT token
     const token = jwt.sign(
-      { studentId: student._id, role: student.role, email: student.email },
+      { studentId: student._id, role: student.role, uidNumber: student.uidNumber, email: student.email },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );

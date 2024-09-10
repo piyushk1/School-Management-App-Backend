@@ -110,4 +110,27 @@ router.get('/checkProfileCompletion/:uidNumber', async (req, res) => {
 });
 
 
+router.put('/updateProfile/:studentId', async (req, res) => {
+  const { gender, dob, phoneNo } = req.body;
+
+  try {
+    const student = await Student.findByIdAndUpdate(
+      req.params.studentId,
+      { gender, dob, phoneNo },
+      { new: true, runValidators: true }
+    );
+
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    res.status(200).json({ message: 'Profile updated successfully', student });
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+
 module.exports = router;
